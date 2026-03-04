@@ -55,6 +55,13 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
 .next-time { font-size:13px; color:#e8c98a; margin-top:2px; }
 .no-lessons { font-size:14px; color:rgba(255,255,255,0.55); font-style:italic; }
 
+/* BANNER EXHAUSTED */
+.new-pkg-banner { background:#fdf0ec; border:1.5px dashed #e8c0b0; border-radius:14px; padding:16px 20px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; gap:14px; transition:all .2s; }
+.new-pkg-banner.clickable:hover { border-color:#b85c38; background:#fae6dc; cursor:pointer; }
+.new-pkg-text { font-size:13px; color:#b85c38; font-weight:500; }
+.new-pkg-sub { font-size:11px; color:#a8957e; margin-top:2px; }
+.new-pkg-arrow { font-size:20px; color:#b85c38; }
+
 /* LINKS */
 .links-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:18px; }
 .link-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px 10px 12px; text-decoration:none; color:inherit; display:flex; flex-direction:column; align-items:center; gap:8px; transition:all 0.2s; text-align:center; }
@@ -107,7 +114,6 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
 .field label { display:block; font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:var(--light); margin-bottom:6px; }
 .field input, .field select { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:10px 14px; font-size:14px; font-family:'Outfit',sans-serif; color:var(--dark); outline:none; transition:border-color 0.2s; }
 .field input:focus, .field select:focus { border-color:var(--accent); }
-.photo-hint { font-size:11px; color:var(--light); margin-top:4px; }
 
 .btn-primary { flex:1; background:var(--dark); color:#fff; border:none; border-radius:100px; padding:12px; font-size:14px; font-weight:500; font-family:'Outfit',sans-serif; cursor:pointer; transition:background 0.2s; text-align:center; display:block; width:100%;}
 .btn-primary:hover { background:var(--accent); }
@@ -145,7 +151,6 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
   
   <div class="package-card">
     <h3 style="font-size: 18px; margin-bottom: 20px; font-family:'Outfit',sans-serif; font-weight: 600;">Nuevo Alumno</h3>
-    
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
         <div class="field">
             <label>Имя ученика</label>
@@ -156,7 +161,6 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
             <input type="text" id="db-inp-photo" placeholder="https://...">
         </div>
     </div>
-
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
         <div class="field">
             <label>Пакет уроков</label>
@@ -180,7 +184,6 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
             </select>
         </div>
     </div>
-
     <div class="field">
         <label>Zoom / Meet Link</label>
         <input type="text" id="db-inp-zoom">
@@ -193,11 +196,8 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
         <label>Oferta Link</label>
         <input type="text" id="db-inp-offer">
     </div>
-
     <hr class="divider"/>
-    
     <div id="db-lessons-container"></div>
-
     <button class="btn-primary" onclick="createNewStudent()" style="margin-top: 20px;">Crear y Guardar</button>
   </div>
 
@@ -239,6 +239,14 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
       </a>
     </div>
 
+    <div class="new-pkg-banner" id="newPkgBanner" style="display:none">
+      <div>
+        <div class="new-pkg-text" id="newPkgTitle">🎉 Пакет завершён! Начать новый?</div>
+        <div class="new-pkg-sub" id="newPkgSub">Нажми, чтобы добавить следующий пакет занятий</div>
+      </div>
+      <div class="new-pkg-arrow" id="newPkgArrow">→</div>
+    </div>
+
     <div class="package-card">
       <div class="pkg-top">
         <div>
@@ -272,6 +280,11 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
       </div>
     </div>
 
+    <div class="cal-section" id="history-section" style="display:none;">
+      <div class="sec-title">История пакетов (Historial)</div>
+      <div id="historyList"></div>
+    </div>
+
     <div class="footer-txt">Кабинет обновляется после каждого занятия</div>
   </div>
 </div>
@@ -285,7 +298,7 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
     </div>
     <div class="field">
       <label>Фото / обложка (URL)</label>
-      <input type="text" id="inp-photo" placeholder="https://i.imgur.com/..."/>
+      <input type="text" id="inp-photo"/>
     </div>
     <div class="field">
       <label>Пакет уроков</label>
@@ -329,6 +342,39 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal('editMeta')">Отмена</button>
       <button class="btn-primary" onclick="saveAll()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-newPackage">
+  <div class="modal">
+    <h2>Начать новый пакет</h2>
+    <p style="font-size: 13px; color: var(--mid); margin-bottom: 20px;">Текущий пакет будет сохранен в истории. Будущие запланированные занятия сохранятся.</p>
+    
+    <div class="field">
+      <label>Новый пакет уроков</label>
+      <select id="newpkg-inp-pkg" onchange="toggleCustomNewPkg()">
+        <option value="4">Пакет 4 занятия</option>
+        <option value="8" selected>Пакет 8 занятий</option>
+        <option value="12">Пакет 12 занятий</option>
+        <option value="custom">Otro...</option>
+      </select>
+    </div>
+    <div class="field" id="newpkg-customPkgField" style="display:none">
+      <label>Количество</label>
+      <input type="number" id="newpkg-inp-pkgCustom" min="1" max="99"/>
+    </div>
+    <div class="field">
+      <label>Статус оплаты</label>
+      <select id="newpkg-inp-status">
+        <option value="unpaid" selected>Не оплачен</option>
+        <option value="paid">Оплачен</option>
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('newPackage')">Отмена</button>
+      <button class="btn-primary" onclick="confirmNewPackage()">Обновить пакет</button>
     </div>
   </div>
 </div>
@@ -391,9 +437,12 @@ async function init() {
   if (isTeacher && !studentId) {
     document.getElementById('teacher-dashboard').style.display = 'block';
     renderDashboard();
-    renderLessonDateInputs(); // Genera los inputs de clases por defecto
+    renderLessonDateInputs();
   } else if (studentId && allStudents[studentId]) {
     state = allStudents[studentId];
+    // Aseguramos que exista el historial en el state
+    if (!state.history) state.history = [];
+
     document.getElementById('student-view').style.display = 'block';
     const t = new Date();
     calYear = t.getFullYear();
@@ -441,9 +490,7 @@ function renderLessonDateInputs() {
     const container = document.getElementById('db-lessons-container');
     container.innerHTML = '<h3 style="font-size: 16px; margin-bottom: 12px; font-family:\'Outfit\',sans-serif;">Programar Clases (Opcional)</h3>';
     
-    // Evitar renderizar una barbaridad de inputs si se equivocan tecleando
     const limit = Math.min(n, 99); 
-
     for(let i = 1; i <= limit; i++) {
         container.innerHTML += `
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px;">
@@ -473,19 +520,17 @@ async function createNewStudent() {
 
   const newId = generateId(name);
   
-  // Get package total
   const pkgVal = document.getElementById('db-inp-pkg').value;
   const packageTotal = (pkgVal === 'custom') ? 
     (parseInt(document.getElementById('db-inp-pkgCustom').value) || 1) : 
     parseInt(pkgVal);
 
-  // Recolectar las fechas y horas llenadas
   const dateInputs = document.querySelectorAll('.db-lesson-date');
   const timeInputs = document.querySelectorAll('.db-lesson-time');
   const newLessons = [];
 
   for (let i = 0; i < dateInputs.length; i++) {
-      if (dateInputs[i].value) { // Solo guarda si el profe eligió una fecha
+      if (dateInputs[i].value) {
           newLessons.push({
               date: dateInputs[i].value,
               time: timeInputs[i].value || '18:00',
@@ -494,7 +539,6 @@ async function createNewStudent() {
       }
   }
 
-  // Ordenar las clases cronológicamente por las dudas
   newLessons.sort((a,b) => a.date.localeCompare(b.date));
 
   allStudents[newId] = {
@@ -505,16 +549,16 @@ async function createNewStudent() {
     zoom: document.getElementById('db-inp-zoom').value.trim(),
     miro: document.getElementById('db-inp-miro').value.trim(),
     offer: document.getElementById('db-inp-offer').value.trim(),
-    lessons: newLessons
+    lessons: newLessons,
+    history: [] // Inicializamos el historial vacío
   };
 
-  // Reset fields
   nameInput.value = '';
   document.getElementById('db-inp-photo').value = '';
   document.getElementById('db-inp-zoom').value = '';
   document.getElementById('db-inp-miro').value = '';
   document.getElementById('db-inp-offer').value = '';
-  renderLessonDateInputs(); // Resetea las fechas del formulario
+  renderLessonDateInputs();
 
   await saveDatabase();
   renderDashboard();
@@ -576,6 +620,7 @@ function render() {
 
   const done = state.lessons.filter(l=>l.done).length;
   const left = Math.max(0, state.packageTotal - done);
+  
   document.getElementById('progLeft').textContent = left;
   document.getElementById('progTotal').textContent = state.packageTotal;
   document.getElementById('progDone').textContent = done;
@@ -585,8 +630,32 @@ function render() {
   badge.className = 'status-badge ' + (state.paid ? 's-paid' : 's-unpaid');
   document.getElementById('statusTxt').textContent = state.paid ? 'Оплачен' : 'Не оплачен';
 
+  // Lógica del Banner de Nuevo Paquete
+  const exhausted = (state.packageTotal > 0 && left === 0);
+  const banner = document.getElementById('newPkgBanner');
+  
+  if (exhausted) {
+    banner.style.display = 'flex';
+    if (!isTeacher) {
+      banner.classList.remove('clickable');
+      banner.onclick = null;
+      document.getElementById('newPkgTitle').textContent = '🎉 Пакет завершён!';
+      document.getElementById('newPkgSub').textContent = 'Свяжитесь с преподавателем для продления'; // Contact teacher
+      document.getElementById('newPkgArrow').style.display = 'none';
+    } else {
+      banner.classList.add('clickable');
+      banner.onclick = () => openModal('newPackage');
+      document.getElementById('newPkgTitle').textContent = '🎉 Пакет завершён! Начать новый?';
+      document.getElementById('newPkgSub').textContent = 'Нажми, чтобы добавить следующий пакет занятий';
+      document.getElementById('newPkgArrow').style.display = 'block';
+    }
+  } else {
+    banner.style.display = 'none';
+  }
+
   renderNextLesson();
   renderCalendar();
+  renderHistory();
 }
 
 function renderNextLesson() {
@@ -639,6 +708,35 @@ function renderCalendar() {
   }
 }
 
+function renderHistory() {
+  const container = document.getElementById('history-section');
+  const list = document.getElementById('historyList');
+  
+  if (!state.history || state.history.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  
+  container.style.display = 'block';
+  
+  // Invertimos el array para que el más nuevo salga arriba
+  const historyReversed = [...state.history].reverse();
+  
+  list.innerHTML = historyReversed.map(h => {
+    const statusStr = h.paid ? '<span style="color:var(--sage)">Оплачен ✓</span>' : '<span style="color:var(--accent)">Не оплачен ✕</span>';
+    return `
+      <div class="lesson-chip" style="flex-direction:column; align-items:flex-start; gap:8px;">
+        <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+          <strong style="font-size:14px;">Пакет ${h.packageTotal} занятий</strong>
+          <span style="font-size:11px; color:var(--light)">${h.archivedAt}</span>
+        </div>
+        <div style="font-size:12px; color:var(--mid)">
+          Статус: ${statusStr} &nbsp;·&nbsp; Проведено: ${h.lessonsCount}
+        </div>
+      </div>`;
+  }).join('');
+}
+
 function changeMonth(dir) {
   calMonth += dir;
   if (calMonth < 0) { calMonth = 11; calYear--; }
@@ -658,6 +756,11 @@ function closeModal(id) {
 function toggleCustomPkg() {
   const v = document.getElementById('inp-pkg').value;
   document.getElementById('customPkgField').style.display = (v === 'custom') ? 'block' : 'none';
+}
+
+function toggleCustomNewPkg() {
+  const v = document.getElementById('newpkg-inp-pkg').value;
+  document.getElementById('newpkg-customPkgField').style.display = (v === 'custom') ? 'block' : 'none';
 }
 
 function populateForm() {
@@ -742,6 +845,33 @@ async function saveAll() {
   state.offer = document.getElementById('inp-offer').value.trim();
   closeModal('editMeta');
   render(); await saveStudentToCloud();
+}
+
+async function confirmNewPackage() {
+  // Guardamos el historial
+  const completedCount = state.lessons.filter(l => l.done).length;
+  const pendingLessons = state.lessons.filter(l => !l.done);
+
+  state.history.push({
+    packageTotal: state.packageTotal,
+    paid: state.paid,
+    archivedAt: todayStr(),
+    lessonsCount: completedCount
+  });
+
+  // Seteamos el nuevo paquete
+  const pkgVal = document.getElementById('newpkg-inp-pkg').value;
+  const newTotal = (pkgVal === 'custom') ? 
+    (parseInt(document.getElementById('newpkg-inp-pkgCustom').value) || 1) : 
+    parseInt(pkgVal);
+
+  state.packageTotal = newTotal;
+  state.paid = (document.getElementById('newpkg-inp-status').value === 'paid');
+  state.lessons = pendingLessons; // Conservamos las programadas futuras
+
+  closeModal('newPackage');
+  render();
+  await saveStudentToCloud();
 }
 
 document.querySelectorAll('.modal-overlay').forEach(el => {
