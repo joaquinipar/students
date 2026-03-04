@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Кабинет ученика</title>
+<title>Кабинет ученика - Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -98,7 +98,7 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
 .legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--mid); }
 .legend-dot { width:10px; height:10px; border-radius:3px; }
 
-/* MODALS */
+/* MODALS & FORMS */
 .modal-overlay { position:fixed; inset:0; background:rgba(10,6,2,0.55); backdrop-filter:blur(4px); z-index:300; display:none; align-items:center; justify-content:center; padding:20px; }
 .modal-overlay.open { display:flex; }
 .modal { background:var(--card); border-radius:20px; padding:28px; width:100%; max-width:480px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 60px rgba(0,0,0,0.3); }
@@ -108,14 +108,14 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
 .field input, .field select { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:10px 14px; font-size:14px; font-family:'Outfit',sans-serif; color:var(--dark); outline:none; transition:border-color 0.2s; }
 .field input:focus, .field select:focus { border-color:var(--accent); }
 .photo-hint { font-size:11px; color:var(--light); margin-top:4px; }
-.modal-actions { display:flex; gap:10px; margin-top:20px; }
-.btn-primary { flex:1; background:var(--dark); color:#fff; border:none; border-radius:100px; padding:12px; font-size:14px; font-weight:500; font-family:'Outfit',sans-serif; cursor:pointer; transition:background 0.2s; }
+
+.btn-primary { flex:1; background:var(--dark); color:#fff; border:none; border-radius:100px; padding:12px; font-size:14px; font-weight:500; font-family:'Outfit',sans-serif; cursor:pointer; transition:background 0.2s; text-align:center; display:block; width:100%;}
 .btn-primary:hover { background:var(--accent); }
-.btn-secondary { flex:1; background:transparent; color:var(--mid); border:1px solid var(--border); border-radius:100px; padding:12px; font-size:14px; font-family:'Outfit',sans-serif; cursor:pointer; transition:all 0.2s; }
+.btn-secondary { flex:1; background:transparent; color:var(--mid); border:1px solid var(--border); border-radius:100px; padding:12px; font-size:14px; font-family:'Outfit',sans-serif; cursor:pointer; transition:all 0.2s; text-align:center; display:block; width:100%; text-decoration: none;}
 .btn-secondary:hover { border-color:var(--mid); color:var(--dark); }
 
 /* LESSON CHIPS & DASHBOARD */
-.lesson-chip { display:flex; align-items:center; justify-content:space-between; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:8px 12px; margin-bottom:6px; font-size:13px; }
+.lesson-chip { display:flex; align-items:center; justify-content:space-between; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:12px; margin-bottom:10px; font-size:13px; }
 .lesson-chip.is-done { border-color:#c0d8b4; background:#f0f8ec; }
 .lesson-chip.is-next { border-color:#e8c0b0; background:#fdf0ec; }
 .chip-actions { display:flex; gap:6px; }
@@ -126,7 +126,7 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
 
 .divider { border:none; border-top:1px solid var(--border); margin:18px 0 14px; }
 .footer-txt { text-align:center; font-size:11px; color:var(--light); margin-top:32px; }
-.student-link-box { font-family: monospace; font-size: 11px; background: #e4dbd0; padding: 4px 8px; border-radius: 4px; margin-top: 4px; display: inline-block; word-break: break-all;}
+.student-link-box { font-family: monospace; font-size: 11px; background: #e4dbd0; padding: 4px 8px; border-radius: 4px; margin-top: 4px; display: inline-block; word-break: break-all; width: 100%; box-sizing: border-box;}
 
 @media(max-width:480px){
   .hero-content { padding: 0 20px 22px; }
@@ -140,17 +140,69 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
 </head>
 <body>
 
-<div id="teacher-dashboard" style="display: none; padding: 40px 20px; max-width: 600px; margin: 0 auto;">
-  <h2 style="font-family:'Cormorant Garamond',serif; font-size: 32px;">Panel de Control</h2>
+<div id="teacher-dashboard" style="display: none; padding: 40px 20px; max-width: 680px; margin: 0 auto;">
+  <h2 style="font-family:'Cormorant Garamond',serif; font-size: 36px; margin-bottom: 24px;">Admin Panel</h2>
   
-  <div class="package-card" style="margin-top: 20px;">
-    <h3 style="font-size: 16px; margin-bottom: 12px;">Agregar Nuevo Alumno</h3>
-    <input type="text" id="new-student-name" placeholder="Ej: Juan Pérez" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 8px; border: 1px solid var(--border); font-family:'Outfit',sans-serif;">
-    <button class="btn-primary" onclick="createNewStudent()" style="width: 100%;">Crear Alumno</button>
+  <div class="package-card">
+    <h3 style="font-size: 18px; margin-bottom: 20px; font-family:'Outfit',sans-serif; font-weight: 600;">Nuevo Alumno</h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="field">
+            <label>Имя ученика</label>
+            <input type="text" id="db-inp-name" placeholder="Ej: Juan Pérez">
+        </div>
+        <div class="field">
+            <label>Фото / обложка (URL)</label>
+            <input type="text" id="db-inp-photo" placeholder="https://...">
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="field">
+            <label>Пакет уроков</label>
+            <select id="db-inp-pkg" onchange="toggleCustomPkgDb()">
+                <option value="1">Разовое занятие</option>
+                <option value="4">Пакет 4 занятия</option>
+                <option value="8" selected>Пакет 8 занятий</option>
+                <option value="12">Пакет 12 занятий</option>
+                <option value="custom">Otro...</option>
+            </select>
+        </div>
+        <div class="field" id="db-customPkgField" style="display:none">
+            <label>Cantidad</label>
+            <input type="number" id="db-inp-pkgCustom" min="1" max="99" value="6" oninput="renderLessonDateInputs()">
+        </div>
+        <div class="field">
+            <label>Статус оплаты</label>
+            <select id="db-inp-status">
+                <option value="paid">Оплачен</option>
+                <option value="unpaid">Не оплачен</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Zoom / Meet Link</label>
+        <input type="text" id="db-inp-zoom">
+    </div>
+    <div class="field">
+        <label>Miro Link</label>
+        <input type="text" id="db-inp-miro">
+    </div>
+    <div class="field">
+        <label>Oferta Link</label>
+        <input type="text" id="db-inp-offer">
+    </div>
+
+    <hr class="divider"/>
+    
+    <div id="db-lessons-container"></div>
+
+    <button class="btn-primary" onclick="createNewStudent()" style="margin-top: 20px;">Crear y Guardar</button>
   </div>
 
-  <h3 style="margin-top: 30px; font-size: 14px; text-transform: uppercase; color: var(--light); letter-spacing: 0.1em;">Lista de Alumnos</h3>
-  <div id="students-list" style="margin-top: 10px;"></div>
+  <h3 style="margin-top: 40px; font-size: 12px; text-transform: uppercase; color: var(--light); letter-spacing: 0.15em; font-weight: 600;">Lista de Alumnos</h3>
+  <div id="students-list" style="margin-top: 16px;"></div>
 </div>
 
 <div id="student-view" style="display: none;">
@@ -242,11 +294,11 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
         <option value="4">Пакет 4 занятия</option>
         <option value="8">Пакет 8 занятий</option>
         <option value="12">Пакет 12 занятий</option>
-        <option value="custom">Другое количество...</option>
+        <option value="custom">Otro...</option>
       </select>
     </div>
     <div class="field" id="customPkgField" style="display:none">
-      <label>Количество уроков</label>
+      <label>Cantidad</label>
       <input type="number" id="inp-pkgCustom" min="1" max="99"/>
     </div>
     <div class="field">
@@ -300,25 +352,23 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
 </div>
 
 <script>
-
 // --- CONSTANTES ---
 const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const MONTHS_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 const WEEKDAYS_FULL = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
 const DAYS_SHORT = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 
-// --- VARIABLES GLOBALES ---
+// --- GLOBALS ---
 const urlParams = new URLSearchParams(window.location.search);
 const studentId = urlParams.get('id');
 const isTeacher = urlParams.get('profe') === 'secreto';
 
 let allStudents = {};
-let state = null; // Guardará solo los datos del alumno activo
+let state = null; 
 let calYear, calMonth;
 
-// --- INICIALIZACIÓN Y ENRUTAMIENTO ---
+// --- INITIALIZATION ---
 async function init() {
-  // Ajuste de UI según rol
   if (!isTeacher) {
     document.querySelector('.toolbar').style.display = 'none';
     const style = document.createElement('style');
@@ -326,12 +376,10 @@ async function init() {
     document.head.appendChild(style);
   }
 
-  // Cargar base de datos
   try {
-  const res = await fetch('/api/read');
+    const res = await fetch('/api/read');
     const data = await res.json();
     if (data.record) {
-      // JSONBin devuelve arrays vacíos a veces si no lo guardaste como objeto puro, aseguramos que sea objeto
       allStudents = Array.isArray(data.record) ? {} : data.record; 
     }
   } catch (error) {
@@ -340,13 +388,11 @@ async function init() {
     return;
   }
 
-  // Ruteo
   if (isTeacher && !studentId) {
-    // DASHBOARD
     document.getElementById('teacher-dashboard').style.display = 'block';
     renderDashboard();
+    renderLessonDateInputs(); // Genera los inputs de clases por defecto
   } else if (studentId && allStudents[studentId]) {
-    // VISTA ALUMNO
     state = allStudents[studentId];
     document.getElementById('student-view').style.display = 'block';
     const t = new Date();
@@ -354,28 +400,20 @@ async function init() {
     calMonth = t.getMonth();
     render();
   } else {
-    // ERROR / NO ENCONTRADO
     document.body.innerHTML = "<h2 style='text-align:center; padding: 50px;'>Alumno no encontrado. Revisá el link.</h2>";
   }
 }
 
-// --- COMUNICACIÓN CON LA NUBE ---
+// --- CLOUD STORAGE ---
 async function saveDatabase() {
   if (!isTeacher) return;
-  
   try {
-    // Apuntamos a nuestra propia Serverless Function
     const response = await fetch('/api/save', {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(allStudents)
     });
-
-    if (!response.ok) {
-      throw new Error("Error del servidor");
-    }
+    if (!response.ok) throw new Error("Error del servidor");
   } catch (error) {
     alert("Hubo un error al guardar los datos.");
     console.error(error);
@@ -387,7 +425,41 @@ async function saveStudentToCloud() {
   await saveDatabase();
 }
 
-// --- LÓGICA DEL DASHBOARD ---
+// --- DASHBOARD LOGIC ---
+function toggleCustomPkgDb() {
+    const v = document.getElementById('db-inp-pkg').value;
+    document.getElementById('db-customPkgField').style.display = (v === 'custom') ? 'block' : 'none';
+    renderLessonDateInputs();
+}
+
+function renderLessonDateInputs() {
+    const pkgVal = document.getElementById('db-inp-pkg').value;
+    const n = (pkgVal === 'custom') ? 
+      (parseInt(document.getElementById('db-inp-pkgCustom').value) || 1) : 
+      parseInt(pkgVal);
+
+    const container = document.getElementById('db-lessons-container');
+    container.innerHTML = '<h3 style="font-size: 16px; margin-bottom: 12px; font-family:\'Outfit\',sans-serif;">Programar Clases (Opcional)</h3>';
+    
+    // Evitar renderizar una barbaridad de inputs si se equivocan tecleando
+    const limit = Math.min(n, 99); 
+
+    for(let i = 1; i <= limit; i++) {
+        container.innerHTML += `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px;">
+            <div class="field" style="margin-bottom: 0;">
+                <label>Clase ${i} - Fecha</label>
+                <input type="date" class="db-lesson-date" />
+            </div>
+            <div class="field" style="margin-bottom: 0;">
+                <label>Hora</label>
+                <input type="time" class="db-lesson-time" value="18:00" />
+            </div>
+        </div>
+        `;
+    }
+}
+
 function generateId(name) {
   const cleanName = name.toLowerCase().replace(/[^a-z0-9]/g, '');
   const randomStr = Math.random().toString(36).substring(2, 6);
@@ -395,24 +467,64 @@ function generateId(name) {
 }
 
 async function createNewStudent() {
-  const name = document.getElementById('new-student-name').value.trim();
+  const nameInput = document.getElementById('db-inp-name');
+  const name = nameInput.value.trim();
   if (!name) return alert("Ingresá un nombre");
 
   const newId = generateId(name);
+  
+  // Get package total
+  const pkgVal = document.getElementById('db-inp-pkg').value;
+  const packageTotal = (pkgVal === 'custom') ? 
+    (parseInt(document.getElementById('db-inp-pkgCustom').value) || 1) : 
+    parseInt(pkgVal);
+
+  // Recolectar las fechas y horas llenadas
+  const dateInputs = document.querySelectorAll('.db-lesson-date');
+  const timeInputs = document.querySelectorAll('.db-lesson-time');
+  const newLessons = [];
+
+  for (let i = 0; i < dateInputs.length; i++) {
+      if (dateInputs[i].value) { // Solo guarda si el profe eligió una fecha
+          newLessons.push({
+              date: dateInputs[i].value,
+              time: timeInputs[i].value || '18:00',
+              done: false
+          });
+      }
+  }
+
+  // Ordenar las clases cronológicamente por las dudas
+  newLessons.sort((a,b) => a.date.localeCompare(b.date));
+
   allStudents[newId] = {
     name: name,
-    photo: '',
-    packageTotal: 8,
-    paid: false,
-    zoom: '',
-    miro: '',
-    offer: '',
-    lessons: []
+    photo: document.getElementById('db-inp-photo').value.trim(),
+    packageTotal: packageTotal,
+    paid: (document.getElementById('db-inp-status').value === 'paid'),
+    zoom: document.getElementById('db-inp-zoom').value.trim(),
+    miro: document.getElementById('db-inp-miro').value.trim(),
+    offer: document.getElementById('db-inp-offer').value.trim(),
+    lessons: newLessons
   };
 
-  document.getElementById('new-student-name').value = '';
+  // Reset fields
+  nameInput.value = '';
+  document.getElementById('db-inp-photo').value = '';
+  document.getElementById('db-inp-zoom').value = '';
+  document.getElementById('db-inp-miro').value = '';
+  document.getElementById('db-inp-offer').value = '';
+  renderLessonDateInputs(); // Resetea las fechas del formulario
+
   await saveDatabase();
   renderDashboard();
+}
+
+async function deleteStudent(id) {
+    if(!confirm(`¿Seguro que querés borrar a ${allStudents[id].name}?`)) return;
+    delete allStudents[id];
+    await saveDatabase();
+    renderDashboard();
 }
 
 function renderDashboard() {
@@ -423,25 +535,27 @@ function renderDashboard() {
   for (const [id, data] of Object.entries(allStudents)) {
     const studentUrl = `${baseUrl}?id=${id}`;
     listContainer.innerHTML += `
-      <div class="lesson-chip" style="margin-top: 10px; flex-direction: column; align-items: flex-start; gap: 8px;">
+      <div class="lesson-chip" style="flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px;">
         <div style="display:flex; justify-content: space-between; width: 100%; align-items: center;">
-          <span style="font-size: 16px;"><strong>${data.name}</strong></span>
-          <a href="${studentUrl}&profe=secreto" class="btn-secondary" style="padding: 6px 12px; text-decoration: none; font-size: 12px;">Abrir Panel</a>
+          <span style="font-size: 18px;"><strong>${data.name}</strong></span>
+          <div style="display: flex; gap: 8px;">
+            <a href="${studentUrl}&profe=secreto" class="btn-secondary" style="padding: 6px 12px; font-size: 12px; width: auto;">Editar</a>
+            <button onclick="deleteStudent('${id}')" class="btn-tool" style="background: #fdf0ec; color: #c47060; border: 1px solid #e8c0b0; padding: 4px 10px;">✕</button>
+          </div>
         </div>
-        <div style="font-size: 12px; color: var(--mid);">
-          Link alumno (solo lectura):<br>
+        <div style="font-size: 12px; color: var(--mid); width: 100%;">
+          Link Alumno:<br>
           <div class="student-link-box">${studentUrl}</div>
         </div>
       </div>
     `;
   }
   if (Object.keys(allStudents).length === 0) {
-    listContainer.innerHTML = '<p style="font-size: 13px; color: var(--light);">Todavía no hay alumnos creados.</p>';
+    listContainer.innerHTML = '<p style="font-size: 14px; color: var(--light);">No hay alumnos todavía.</p>';
   }
 }
 
-
-// --- LÓGICA DE LA VISTA DEL ALUMNO (Original adaptada) ---
+// --- STUDENT VIEW LOGIC ---
 function todayStr() {
   const t = new Date();
   return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
@@ -495,36 +609,26 @@ function renderCalendar() {
   document.getElementById('calTitle').textContent = MONTHS[calMonth] + ' ' + calYear;
   const grid = document.getElementById('calGrid');
   grid.innerHTML = '';
-
   DAYS_SHORT.forEach(d => {
     const el = document.createElement('div');
-    el.className = 'cal-dow';
-    el.textContent = d;
-    grid.appendChild(el);
+    el.className = 'cal-dow'; el.textContent = d; grid.appendChild(el);
   });
-
   const firstDay = new Date(calYear, calMonth, 1);
   let dow = firstDay.getDay();
   dow = dow === 0 ? 6 : dow - 1;
-
   const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
   const ts = todayStr();
-
   const future = state.lessons.filter(l=>!l.done && l.date >= ts).sort((a,b)=>a.date.localeCompare(b.date));
   const nextDate = future.length ? future[0].date : null;
-
   const lessonMap = {};
   state.lessons.forEach(l => { lessonMap[l.date] = l; });
-
   for (let i = 0; i < dow; i++) {
     const el = document.createElement('div'); el.className = 'cal-day'; grid.appendChild(el);
   }
-
   for (let d = 1; d <= daysInMonth; d++) {
     const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const el = document.createElement('div');
-    el.className = 'cal-day';
-    el.textContent = d;
+    el.className = 'cal-day'; el.textContent = d;
     if (ds === ts) el.classList.add('today');
     if (lessonMap[ds]) {
       el.classList.add('lesson');
@@ -553,7 +657,7 @@ function closeModal(id) {
 
 function toggleCustomPkg() {
   const v = document.getElementById('inp-pkg').value;
-  document.getElementById('customPkgField').style.display = v === 'custom' ? 'block' : 'none';
+  document.getElementById('customPkgField').style.display = (v === 'custom') ? 'block' : 'none';
 }
 
 function populateForm() {
@@ -580,7 +684,6 @@ function renderLessonsList() {
   const ts = todayStr();
   const future = state.lessons.filter(l=>!l.done && l.date>=ts).sort((a,b)=>a.date.localeCompare(b.date));
   const nextDate = future.length ? future[0].date : null;
-
   const container = document.getElementById('lessonsList');
   if (!state.lessons.length) {
     container.innerHTML = '<div style="font-size:12px;color:var(--light);margin-bottom:8px;">Нет занятий — добавь первое!</div>';
@@ -603,16 +706,12 @@ function renderLessonsList() {
 
 async function toggleDone(i) { 
   state.lessons[i].done = !state.lessons[i].done; 
-  renderLessonsList(); 
-  render(); 
-  await saveStudentToCloud();
+  renderLessonsList(); render(); await saveStudentToCloud();
 }
 
 async function deleteLesson(i) { 
   state.lessons.splice(i,1); 
-  renderLessonsList(); 
-  render(); 
-  await saveStudentToCloud();
+  renderLessonsList(); render(); await saveStudentToCloud();
 }
 
 function openAddLesson() {
@@ -629,9 +728,7 @@ async function addLesson() {
     state.lessons.sort((a,b)=>a.date.localeCompare(b.date));
   }
   closeModal('addLesson');
-  renderLessonsList();
-  render();
-  await saveStudentToCloud();
+  renderLessonsList(); render(); await saveStudentToCloud();
 }
 
 async function saveAll() {
@@ -643,17 +740,14 @@ async function saveAll() {
   state.zoom = document.getElementById('inp-zoom').value.trim();
   state.miro = document.getElementById('inp-miro').value.trim();
   state.offer = document.getElementById('inp-offer').value.trim();
-  
   closeModal('editMeta');
-  render();
-  await saveStudentToCloud();
+  render(); await saveStudentToCloud();
 }
 
 document.querySelectorAll('.modal-overlay').forEach(el => {
   el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
 });
 
-// Arrancar la app
 init();
 </script>
 </body>
