@@ -300,8 +300,6 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--da
 </div>
 
 <script>
-// --- CONFIGURACIÓN BACKEND ---
-const BIN_ID = 'TU_BIN_ID_AQUI'; 
 
 // --- CONSTANTES ---
 const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
@@ -330,7 +328,7 @@ async function init() {
 
   // Cargar base de datos
   try {
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`);
+  const res = await fetch('/api/read');
     const data = await res.json();
     if (data.record) {
       // JSONBin devuelve arrays vacíos a veces si no lo guardaste como objeto puro, aseguramos que sea objeto
